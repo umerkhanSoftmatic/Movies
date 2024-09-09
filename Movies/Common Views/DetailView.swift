@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct DetailView: View {
-    var movie: Result
-    var isFavorite: Bool = false
+    var movie: MovieItem
+    @EnvironmentObject var viewModel: MoviesViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
             
-            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500\(movie.backdrop_path ?? "")")) { image in
+            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w780\(movie.backdrop_path ?? "")")) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -18,7 +18,7 @@ struct DetailView: View {
             
             HStack {
                 
-                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w185\(movie.poster_path ?? "")")) { image in
+                AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/w500\(movie.poster_path ?? "")")) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -39,7 +39,7 @@ struct DetailView: View {
                     HStack {
                         Text(movie.release_date ?? "N/A")
                         Text(" | ")
-                        Text("\(movie.vote_average ?? 0, specifier: "%.1f") ★")
+                        Text("\(movie.vote_average, specifier: "%.1f") ★")
                     }
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -60,6 +60,8 @@ struct DetailView: View {
             }
             .padding(.horizontal, 16)
             
+
+ 
             Spacer()
         }
         .padding(.leading,24)
@@ -71,12 +73,12 @@ struct DetailView: View {
                             )
             {
                 Image(systemName: "bookmark")
-                //                 onTapGesture {
-                //                     isFavorite.toggle()
-                //                 }
-                    .foregroundColor(isFavorite ? .yellow : .white)
+                    .foregroundColor(.white)
             }
         )
+        .onAppear {
+                   viewModel.markMovieAsVisited(movie: movie)
+               }
     }
     
 }
